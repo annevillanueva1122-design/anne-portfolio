@@ -75,7 +75,7 @@ export function App() {
       case 'services': return <ServicesView items={content.services} />;
       case 'toolkit': return <ToolkitView toolkit={content.toolkit} credentials={content.credentials} />;
       case 'contact': return <ContactView />;
-      case 'webapps': return <WebAppsView />;
+      case 'webapps': return <WebAppsView items={content.webBuilds} />;
     }
   })();
 
