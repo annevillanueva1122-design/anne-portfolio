@@ -677,6 +677,11 @@ document.addEventListener('submit', async e=>{
     const r = await fetch(SB.url + '/messages', { method:'POST', headers:{...SB.headers, Prefer:'return=minimal'},
       body: JSON.stringify({ name:d.name.trim(), email:d.email.trim(), company:d.company.trim()||null, message:d.message.trim() }) });
     if(!r.ok) throw new Error(r.status);
+    // email notification (saved in Supabase already, so a failed email never blocks the visitor)
+    if(CFG.notifyEmail) fetch('https://formsubmit.co/ajax/' + CFG.notifyEmail, { method:'POST',
+      headers:{ 'Content-Type':'application/json', Accept:'application/json' },
+      body: JSON.stringify({ _subject:'New portfolio message from ' + d.name.trim(), _template:'table', _captcha:'false', _replyto:d.email.trim(),
+        Name:d.name.trim(), Email:d.email.trim(), Company:d.company.trim()||'-', Message:d.message.trim() }) }).catch(()=>{});
     f.reset(); st.className = 'status ok'; st.textContent = 'Message sent. I\'ll get back to you soon.';
   }catch(err){ st.className = 'status err'; st.textContent = 'Something went wrong. Please email me directly.' }
   finally{ btn.disabled = false }

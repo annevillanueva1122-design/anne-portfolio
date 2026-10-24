@@ -8,5 +8,8 @@ window.SITE_CONFIG = {
   // Where images and the video load from. 'assets' = files in this repo.
   // After uploading to the Supabase bucket, set it to:
   // 'https://abcdxyz.supabase.co/storage/v1/object/public/portfolio'
-  mediaBase: 'https://yxuqiwjjaqjqiclkdkca.supabase.co/storage/v1/object/public/portfolio'
+  mediaBase: 'https://yxuqiwjjaqjqiclkdkca.supabase.co/storage/v1/object/public/portfolio',
+  // Contact form messages are also emailed here (via FormSubmit, no API key).
+  // The first message sends an activation email: click the link in it once.
+  notifyEmail: 'anne.villanueva1122@gmail.com'
 };

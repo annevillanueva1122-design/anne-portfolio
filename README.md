@@ -27,3 +27,4 @@ If the database is unreachable, the site falls back to the content built into `i
 
 ## Contact messages
 **Table Editor > messages**. Visitors can only insert; the public key can't read them.
+Each message is also emailed to `notifyEmail` in `config.js` (via FormSubmit). The very first one sends an activation email; click its link once.
