@@ -240,6 +240,10 @@ main{padding-block:28px 48px;padding-left:max(16px,2.4vw);padding-right:max(16px
 #confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
 @media (prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
 
+/* booking calendar embed */
+.book iframe{display:block;width:100%;height:720px;border:0;border-radius:14px;background:#fff}
+@media (max-width:820px){.book iframe{height:900px}}
+
 /* contact form (saves to Supabase) */
 .cform{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .cform label{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:600;color:var(--muted)}
@@ -602,6 +606,9 @@ contact: () => viewHead('Let\'s work together','Let\'s build something that conv
     <article class="panel"><h3>Before we talk</h3><p>My CV has the full history, tools and references.</p>
       <div class="btnrow"><a class="btn dark" href="${CV}" target="_blank" rel="noopener">Check my CV →</a><button class="btn ghost" data-go="experience">Read case studies</button></div></article>
   </div>
+  ${CFG.bookingUrl?`<h2 class="sec">Book a discovery call</h2>
+  <article class="panel book"><p>45 minutes on Google Meet. Pick a time that works for you; times show in your own time zone.</p>
+    <iframe src="${CFG.bookingUrl}" title="Book a discovery call with May Anne" loading="lazy"></iframe></article>`:''}
   <h2 class="sec">Send me a message</h2>
   <article class="panel">
     <form class="cform" id="cform" novalidate>

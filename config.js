@@ -11,5 +11,7 @@ window.SITE_CONFIG = {
   mediaBase: 'https://yxuqiwjjaqjqiclkdkca.supabase.co/storage/v1/object/public/portfolio',
   // Contact form messages are also emailed here (via FormSubmit, no API key).
   // The first message sends an activation email: click the link in it once.
-  notifyEmail: 'anne.villanueva1122@gmail.com'
+  notifyEmail: 'anne.villanueva1122@gmail.com',
+  // Google Calendar appointment schedule embedded on the Contact page (45-min discovery call)
+  bookingUrl: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ3CATbpabGfo88_K7s4i1uIv5q5qDJ_MMjLMUJ0v-l1YiSMsb4lDkBt91pB8aoeBIw68ejvvIk6?gv=true'
 };
