@@ -16,6 +16,7 @@ const paths = {
   play: <><circle cx="12" cy="12" r="9" /><path d="M10 8.5l5.5 3.5-5.5 3.5z" /></>,
   arrow: <path d="M7 17L17 7M9 7h8v8" />,
   left: <path d="M15 6l-6 6 6 6" />,
+  app: <><rect x="6" y="2" width="12" height="20" rx="3" /><path d="M10 18h4" /></>,
 } satisfies Record<string, ReactElement>;
 
 export type IconName = keyof typeof paths;
