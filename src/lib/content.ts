@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type {
-  Automation, Content, Credential, Experience, Kpi, LibraryItem, ServiceItem, Site, ToolCategory, WorkItem,
+  Automation, Content, Credential, Experience, Kpi, LibraryItem, ServiceItem, Site, ToolCategory, WebBuild, WorkItem,
 } from '../types';
 
 // ---- Row shapes as they come back from Supabase (see supabase/migrations) ----
@@ -26,6 +26,10 @@ export interface ExperienceRow {
 export interface OfferingRow { sort: number; kind: 'service' | 'approach' | 'ads'; title: string; description: string; offering_tags: TagLink[] }
 export interface ToolkitGroupRow { sort: number; name: string; tools: { sort: number; name: string }[] }
 export interface CredentialRow { sort: number; title: string; short_label: string; period: string; detail: string }
+export interface WebBuildRow {
+  sort: number; name: string; kind: string; headline: string; description: string; cover_image: string | null;
+  cover_caption: string | null; demo: 'pulse' | null; live_url: string | null; web_build_tags: TagLink[];
+}
 
 // ---- Pure mappers (unit tested) ----
 
@@ -72,6 +76,10 @@ export const mapCredential = (r: CredentialRow): Credential => ({
 
 export const mapSite = (r: SiteRow): Site => ({ name: r.name, category: r.category, url: r.url });
 export const mapLibrary = (r: LibraryRow): LibraryItem => ({ image: imageFile(r.image_no), caption: r.caption });
+export const mapWebBuild = (r: WebBuildRow): WebBuild => ({
+  name: r.name, kind: r.kind, headline: r.headline, description: r.description, coverImage: opt(r.cover_image),
+  coverCaption: opt(r.cover_caption), demo: opt(r.demo), liveUrl: opt(r.live_url), tags: tagNames(r.web_build_tags),
+});
 
 // ---- Loader ----
 
@@ -85,7 +93,7 @@ export async function loadContent(db: SupabaseClient): Promise<Content> {
       return (data ?? []) as unknown as T[];
     });
 
-  const [kpis, work, automations, sites, library, lovable, experiences, offerings, toolkit, credentials] =
+  const [kpis, work, automations, sites, library, lovable, experiences, offerings, toolkit, credentials, webBuilds] =
     await Promise.all([
       q<KpiRow>('kpis'),
       q<WorkItemRow>('work_items', `*, work_item_tags(${TAGS})`),
@@ -97,6 +105,7 @@ export async function loadContent(db: SupabaseClient): Promise<Content> {
       q<OfferingRow>('offerings', `*, offering_tags(${TAGS})`),
       q<ToolkitGroupRow>('toolkit_groups', '*, tools(sort, name)'),
       q<CredentialRow>('credentials'),
+      q<WebBuildRow>('web_builds', `*, web_build_tags(${TAGS})`),
     ]);
 
   return {
@@ -110,6 +119,7 @@ export async function loadContent(db: SupabaseClient): Promise<Content> {
     services: offerings.map(mapOffering),
     toolkit: toolkit.map(mapToolkitGroup),
     credentials: credentials.map(mapCredential),
+    webBuilds: webBuilds.map(mapWebBuild),
   };
 }
 
