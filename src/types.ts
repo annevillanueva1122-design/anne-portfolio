@@ -72,6 +72,20 @@ export interface Credential {
   shortLabel: string;
 }
 
+export interface WebBuild {
+  name: string;
+  kind: string;
+  headline: string;
+  description: string;
+  tags: string[];
+  /** File in the media bucket, e.g. 'buildison.jpg' */
+  coverImage?: string;
+  coverCaption?: string;
+  /** Built-in interactive demo shown instead of the cover image */
+  demo?: 'pulse';
+  liveUrl?: string;
+}
+
 export interface Content {
   kpis: Kpi[];
   work: WorkItem[];
@@ -83,6 +97,7 @@ export interface Content {
   services: ServiceItem[];
   toolkit: ToolCategory[];
   credentials: Credential[];
+  webBuilds: WebBuild[];
 }
 
 export type ViewKey =

@@ -690,5 +690,35 @@ export const fallbackContent: Content = {
       "period": "2024–2025",
       "shortLabel": "In-depth course · 2024–2025"
     }
+  ],
+  "webBuilds": [
+    {
+      "name": "Buildison",
+      "kind": "Website · React · Supabase",
+      "headline": "Marketing automation site for Buildison Agency",
+      "description": "A standalone site for an all-in-one marketing CRM: animated hero and stats, feature sections with live product previews, tiered pricing with an annual/monthly toggle and a chat widget. Code on GitHub, data in Supabase, auto-deployed on Vercel.",
+      "tags": [
+        "React",
+        "Supabase",
+        "GitHub",
+        "Vercel"
+      ],
+      "coverImage": "buildison.jpg",
+      "coverCaption": "Buildison Agency home page",
+      "liveUrl": "https://buildison-react.vercel.app/"
+    },
+    {
+      "name": "Pulse",
+      "kind": "Mobile app · Clickable prototype",
+      "headline": "The owner's app for a service-business website",
+      "description": "A companion app that shows a business owner what their website is doing: conversion rate, new leads with one-tap call, text and email, the day's bookings and Stripe payments. Try it: switch tabs, change the date range, filter and act on leads, pick a booking day, tap the revenue bars. Demo data for a fictional med spa.",
+      "tags": [
+        "Mobile UI",
+        "Leads",
+        "Bookings",
+        "Stripe payments"
+      ],
+      "demo": "pulse"
+    }
   ]
 };
