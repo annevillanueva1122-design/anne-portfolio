@@ -1,4 +1,5 @@
 import { ExternalLink, Tags, ViewHead, useActions } from './shared';
+import { PulseDemo } from './PulseDemo';
 
 interface Screen {
   src: string;
@@ -11,8 +12,9 @@ interface WebBuild {
   headline: string;
   description: string;
   tags: string[];
-  cover: Screen;
-  screens?: Screen[];
+  cover?: Screen;
+  /** Show the clickable app instead of a screenshot */
+  demo?: boolean;
   liveUrl?: string;
 }
 
@@ -30,18 +32,12 @@ const BUILDS: WebBuild[] = [
   },
   {
     name: 'Pulse',
-    kind: 'Mobile app · Product mockup',
+    kind: 'Mobile app · Clickable prototype',
     headline: "The owner's app for a service-business website",
     description:
-      "A companion app that shows a business owner what their website is doing: conversion rate, new leads with one-tap call, text and email, the day's bookings and Stripe payments. Shown with demo data for a fictional med spa.",
+      "A companion app that shows a business owner what their website is doing: conversion rate, new leads with one-tap call, text and email, the day's bookings and Stripe payments. Try it: switch tabs, change the date range, filter and act on leads, pick a booking day, tap the revenue bars. Demo data for a fictional med spa.",
     tags: ['Mobile UI', 'Leads', 'Bookings', 'Stripe payments'],
-    cover: { src: '/samples/pulse-cover.jpg', caption: 'Pulse app: Today, Leads, Bookings and Payments screens' },
-    screens: [
-      { src: '/samples/pulse-main.jpg', caption: 'Pulse · Today' },
-      { src: '/samples/pulse-leads.jpg', caption: 'Pulse · Leads' },
-      { src: '/samples/pulse-bookings.jpg', caption: 'Pulse · Bookings' },
-      { src: '/samples/pulse-payments.jpg', caption: 'Pulse · Payments' },
-    ],
+    demo: true,
   },
 ];
 
@@ -61,16 +57,12 @@ export function WebAppsView() {
   return (
     <>
       <ViewHead eyebrow="Front-end & product builds" title="Web App Builds"
-        lede="Standalone builds outside the CRM: a coded website and a mobile app concept. Click any image to enlarge it." />
+        lede="Standalone builds outside the CRM: a coded website and a clickable mobile app concept." />
       <div className="grid2">
         {BUILDS.map((b) => (
           <article className="panel" key={b.name}>
-            <Shot {...b.cover} ratio="16 / 9" />
-            {b.screens && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 8 }}>
-                {b.screens.map((s) => <Shot key={s.src} {...s} ratio="390 / 844" />)}
-              </div>
-            )}
+            {b.cover && <Shot {...b.cover} ratio="16 / 9" />}
+            {b.demo && <PulseDemo />}
             <p className="meta">{b.kind}</p>
             <h3>{b.name}</h3>
             <p style={{ color: 'var(--ink)', fontWeight: 600 }}>{b.headline}</p>
