@@ -30,4 +30,4 @@ If the database is unreachable, the site falls back to the content built into `i
 Each message is also emailed to `notifyEmail` in `config.js` (via FormSubmit). The very first one sends an activation email; click its link once.
 
 ## Discovery call booking
-Google Calendar appointment schedule "Discovery Call with May Anne" (45 min, Google Meet, Mon–Fri 8–11:45 PM PH time), embedded on the Contact page via `bookingUrl` in `config.js`. Change hours or duration in Google Calendar; the site updates on its own.
+Google Calendar appointment schedule "Discovery Call with May Anne" (45 min, Google Meet, Mon–Fri 8–11:45 AM Eastern Time), opened in a popup from the "Book your discovery call with me" button on the Contact page, via `bookingUrl` in `config.js`. Change hours or duration in Google Calendar; the site updates on its own.
