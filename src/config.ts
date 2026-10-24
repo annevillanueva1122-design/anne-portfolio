@@ -11,5 +11,8 @@ export const config = {
   otherCaseStudyUrl: 'https://drive.google.com/file/d/1EnfUswlP_OETKDsfXgoya-Pw2o1JpGsT/view?usp=drive_link',
 } as const;
 
-/** Full URL of a file in the Supabase media bucket, e.g. media('img-01.jpg') */
-export const media = (file: string) => `${config.mediaBase}/${file}`;
+/**
+ * Full URL of a file in the Supabase media bucket, e.g. media('img-01.jpg').
+ * Images are served as their .webp twin in the bucket (about 30% smaller); video and other files as-is.
+ */
+export const media = (file: string) => `${config.mediaBase}/${file.replace(/\.(jpe?g|png)$/i, '.webp')}`;
