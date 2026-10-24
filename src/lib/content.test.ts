@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { imageFile, mapAutomation, mapExperience, mapToolkitGroup, mapWorkItem, tagNames, withFallback } from './content';
+import { imageFile, mapAutomation, mapExperience, mapToolkitGroup, mapWebBuild, mapWorkItem, tagNames, withFallback } from './content';
 import { fallbackContent } from '../data/fallback';
 
 describe('tagNames', () => {
@@ -39,6 +39,19 @@ describe('row mappers', () => {
   it('sorts tools inside a group', () => {
     expect(mapToolkitGroup({ sort: 0, name: 'Code', tools: [{ sort: 1, name: 'CSS' }, { sort: 0, name: 'HTML' }] }).tools)
       .toEqual(['HTML', 'CSS']);
+  });
+});
+
+describe('mapWebBuild', () => {
+  it('maps a web build row with ordered tags and an optional demo', () => {
+    expect(mapWebBuild({
+      sort: 0, name: 'Pulse', kind: 'Mobile app', headline: 'h', description: 'd', cover_image: null,
+      cover_caption: null, demo: 'pulse', live_url: null,
+      web_build_tags: [{ sort: 2, tags: { name: 'Leads' } }, { sort: 1, tags: { name: 'Mobile UI' } }],
+    })).toEqual({
+      name: 'Pulse', kind: 'Mobile app', headline: 'h', description: 'd', coverImage: undefined,
+      coverCaption: undefined, demo: 'pulse', liveUrl: undefined, tags: ['Mobile UI', 'Leads'],
+    });
   });
 });
 
