@@ -162,7 +162,7 @@ function LeadsScreen({ leads, setLeads, toast }: { leads: Lead[]; setLeads: (l: 
   };
   return (
     <>
-      <div><span style={small}>{leads.length} today · {count('new')} not contacted</span><h1 style={h1}>Leads</h1></div>
+      <div><span style={small}>28 today · {count('new')} waiting for a reply</span><h1 style={h1}>Leads</h1></div>
       <label style={{ display: 'flex', alignItems: 'center', gap: 8, height: 44, padding: '0 14px', ...card, borderRadius: 14 }}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.muted} strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
         <input aria-label="Search leads" placeholder="Search name or source" value={query} onChange={(e) => setQuery(e.target.value)}
