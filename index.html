@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>May Anne Guevarra</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: fixed profile sidebar + workspace of clickable bento cards; each card opens its own view */
+:root{
+  --bg:#f7efeb; --bg-glow:radial-gradient(60% 50% at 50% 45%,#fdf9f7,#f7efeb 70%,#f1e6e1);
+  --panel:#ffffff; --panel-2:#faf4f1; --ink:#1d1838; --muted:#6a6485; --line:#e6ddef;
+  --accent:#df6e54; --accent-soft:#fbe7e1; --indigo:#2d2660; --indigo-soft:#e9e6f6; --ok:#23895d; --ok-soft:#dff3e9;
+  --shadow:0 1px 2px rgba(45,38,96,.05),0 8px 24px -12px rgba(45,38,96,.18);
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Instrument Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+/* single light look, matching the cream background of the original portfolio */
+
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg-glow) fixed,var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.02em}
+p{margin:0}
+
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+
+/* sidebar */
+.side{position:sticky;top:env(safe-area-inset-top,0px);height:100vh;display:flex;flex-direction:column;gap:18px;
+  padding:28px 16px 20px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);background:var(--panel)}
+.me{display:flex;flex-direction:column;gap:10px;padding:0 6px}
+.me img{width:104px;height:104px;border-radius:26px;object-fit:cover;border:3px solid var(--panel);box-shadow:0 0 0 2px var(--accent)}
+/* glowing halo behind the profile photo: blurred coral/lavender ring that slowly turns and breathes */
+.glow{position:relative;display:block;width:fit-content;isolation:isolate}
+.glow::before{content:"";position:absolute;inset:-16px;border-radius:40px;z-index:-1;
+  background:conic-gradient(from 0deg,#e4836b,#a996e6,#f2a98f,#e4836b,#a996e6,#e4836b);
+  filter:blur(12px);animation:halo 7s linear infinite,breathe 3.5s ease-in-out infinite alternate}
+@keyframes halo{to{rotate:360deg}}
+@keyframes breathe{from{opacity:.75;scale:.95}to{opacity:1;scale:1.12}}
+@media (prefers-reduced-motion:reduce){.glow::before{animation:none}}
+.me .name{font-family:var(--f-display);font-weight:800;font-size:20px;line-height:1.15;display:flex;align-items:center;gap:6px}
+.me .role{font-size:12.5px;color:var(--muted);line-height:1.4}
+.avail{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ok);background:var(--ok-soft);padding:4px 10px;border-radius:99px;width:fit-content}
+.avail::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 25%,transparent)}
+.socials{display:flex;gap:8px}
+.socials a{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);transition:background-color .18s,color .18s,transform .18s}
+.socials a:hover,.socials a:focus-visible{background:#ece5fc;color:#6a4bd8;border-color:#d9cdfa;transform:translateY(-2px)}
+.socials svg{width:16px;height:16px;fill:currentColor}
+nav.menu{display:flex;flex-direction:column;gap:2px;overflow:auto}
+.menu button{display:flex;align-items:center;gap:10px;background:none;border:0;text-align:left;padding:9px 10px;border-radius:10px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer}
+.menu button svg{width:17px;height:17px;flex:none}
+.menu button{transition:background-color .18s,color .18s,transform .18s}
+.menu button:hover,.menu button:focus-visible{background:#ece5fc;color:#6a4bd8;transform:translateX(3px)}
+.menu button:hover svg,.menu button:focus-visible svg{color:#6a4bd8}
+.menu button[aria-current="true"]{background:var(--indigo-soft);color:var(--ink);font-weight:600}
+.menu button[aria-current="true"] svg{color:var(--accent)}
+.side .foot{margin-top:auto;font-size:11.5px;color:var(--muted);padding:0 6px}
+
+/* main */
+main{padding-block:28px 48px;padding-left:max(16px,2.4vw);padding-right:max(16px,env(safe-area-inset-right,0px),2.4vw);min-width:0}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+.top h1{font-weight:800;font-size:clamp(32px,4.6vw,56px);line-height:1;color:var(--indigo)}
+.top h1 em{font-style:normal;color:var(--accent)}
+.lede{color:var(--muted);max-width:62ch;margin-top:12px;font-size:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:10px 18px;font-weight:600;font-size:14px;text-decoration:none;border:0;cursor:pointer;white-space:nowrap}
+.btn.dark{background:var(--indigo);color:var(--bg)}
+.btn.ghost{background:var(--panel);border:1px solid var(--line)}
+.btn:hover{filter:brightness(1.08)}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap}
+
+.tools{margin-top:22px;display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 14px;box-shadow:var(--shadow);min-width:0}
+.tools .lbl{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.3;flex:none;padding-right:14px;border-right:1px solid var(--line)}
+.tools .lbl b{display:block;color:var(--ink);font-family:var(--f-display);font-size:15px;letter-spacing:0;text-transform:none}
+/* tools train: two identical groups slide left forever; hover pauses it */
+.marquee{flex:1;min-width:0;overflow:hidden;align-self:stretch;display:flex;align-items:center;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.track{display:flex;width:max-content;animation:train 26s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.grp{display:flex;gap:28px;padding-right:28px;font-size:13.5px;font-weight:600;white-space:nowrap}
+.grp span{display:inline-flex;align-items:center;gap:7px}
+.grp i{width:8px;height:8px;border-radius:3px;background:var(--c)}
+@keyframes train{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.track{animation:none}.grp{flex-wrap:wrap;white-space:normal}.grp[aria-hidden]{display:none}}
+
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.kpi b{display:block;font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12.5px;color:var(--muted)}
+
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px;min-width:0;text-align:left;cursor:pointer;transition:transform .18s,border-color .18s}
+.card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--accent) 50%,var(--line))}
+.span2{grid-column:span 2}
+.ch{display:flex;align-items:flex-start;gap:12px}
+.ic{width:36px;height:36px;border-radius:11px;background:var(--accent);color:#fff;display:grid;place-items:center;flex:none}
+.ic svg{width:19px;height:19px}
+.ch h2{font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+.ch p{font-size:13px;color:var(--muted);line-height:1.4}
+.ch .go{margin-left:auto;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);flex:none}
+.card:hover .go{background:var(--indigo);color:var(--bg);border-color:var(--indigo)}
+.go svg{width:14px;height:14px}
+
+.shot{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--panel-2)}
+.shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px}
+.wlist{display:flex;flex-direction:column}
+.wlist div{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.wlist div:last-child{border-bottom:0}
+.wlist b{font-weight:600}
+.wlist span{color:var(--muted);font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;text-align:right;align-self:center}
+
+.list{display:flex;flex-direction:column;gap:6px}
+.li{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--panel-2);border-radius:10px;padding:8px 11px;font-size:13.5px;font-weight:500}
+.li small{font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
+
+.tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--indigo-soft);color:var(--ink);white-space:nowrap}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+
+.about{display:flex;gap:14px;align-items:center}
+.about img{width:84px;height:84px;border-radius:18px;object-fit:cover;flex:none}
+.about p{font-size:13.5px;color:var(--muted)}
+.about p b{color:var(--ink)}
+
+.cred{display:flex;flex-direction:column;gap:10px}
+.cred div{display:flex;gap:10px;align-items:flex-start;font-size:13.5px}
+.cred div::before{content:"";width:8px;height:8px;border-radius:50%;border:2px solid var(--accent);margin-top:6px;flex:none}
+.cred small{display:block;color:var(--muted);font-size:12px}
+
+.tl{display:flex;flex-direction:column;gap:10px}
+.tl div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;font-size:13.5px}
+.tl .d{grid-row:span 2;font-family:var(--f-mono);font-size:10.5px;color:var(--muted);padding-top:3px;width:76px}
+.tl b{font-weight:600}
+.tl span{color:var(--muted);font-size:12.5px}
+.now{color:var(--ok)!important;font-weight:600}
+
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;font-weight:600}
+.flow span{background:var(--panel-2);border:1px solid var(--line);padding:5px 10px;border-radius:99px}
+.flow i{color:var(--accent);font-style:normal}
+
+.contact{background:var(--indigo);color:var(--bg);border-color:transparent}
+.contact .ch p{color:color-mix(in srgb,var(--bg) 75%,transparent)}
+.contact .ic{background:var(--accent)}
+.contact .go{border-color:color-mix(in srgb,var(--bg) 35%,transparent);color:var(--bg)}
+.contact:hover .go{background:var(--accent);border-color:var(--accent)}
+.contact .big{font-family:var(--f-display);font-weight:800;font-size:24px;line-height:1.1}
+
+/* detail views */
+.view-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.back{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.view h1{font-size:clamp(28px,3.6vw,42px);font-weight:800;color:var(--indigo);margin-top:6px}
+.view .lede{margin-bottom:22px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;min-width:0}
+.panel h3{font-size:18px;font-weight:800}
+.panel p{font-size:14px;color:var(--muted)}
+.panel .meta{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.panel .shot{aspect-ratio:16/9;cursor:zoom-in;max-width:100%}
+.num{font-family:var(--f-mono);font-size:11px;color:var(--accent)}
+.panel a.link{font-weight:600;font-size:13.5px;color:var(--accent);text-decoration:none}
+.panel a.link:hover{text-decoration:underline}
+.site{display:flex;align-items:center;gap:12px;text-decoration:none;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;min-width:0}
+.site:hover{border-color:var(--accent)}
+.site .av{width:38px;height:38px;border-radius:11px;background:var(--indigo-soft);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;flex:none}
+.site b{display:block;font-size:14px}
+.site small{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.site .arr{margin-left:auto;color:var(--muted)}
+.sec{margin-top:28px;margin-bottom:12px;font-size:20px;font-weight:800}
+.lib{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.lib .shot{cursor:zoom-in;aspect-ratio:16/9}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:13px;font-weight:500}
+.copy{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--panel-2);border-radius:12px;padding:12px 14px;font-weight:600;flex-wrap:wrap}
+.copy button{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer}
+
+/* intro video: vertical phone-style player beside a short bio */
+.intro{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:20px;align-items:start}
+.vid{aspect-ratio:9/16;max-width:100%;border-radius:24px;overflow:hidden;border:4px solid var(--panel);background:#000;box-shadow:var(--shadow),0 0 0 1px var(--line)}
+.vid video{display:block;width:100%;height:100%;object-fit:cover}
+.intro .panel h3{font-size:clamp(32px,3.6vw,44px);font-weight:800;line-height:1.02;color:var(--indigo)}
+.intro .panel .role-line{color:var(--accent);font-weight:600;font-size:15.5px;margin-top:-2px}
+.intro .li small{text-align:right}
+@media (max-width:820px){.intro{grid-template-columns:minmax(0,1fr)}.vid{width:min(340px,100%);justify-self:center}}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(10,8,20,.82);display:grid;place-items:center;padding:max(20px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(20px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));cursor:zoom-out}
+.lb[hidden]{display:none}
+.lb img{max-height:88vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lb p{color:#fff;text-align:center;margin-top:10px;font-size:14px}
+
+@media (max-width:1100px){
+  .kpi{padding:12px}
+  .kpi b{font-size:22px}
+  .kpi span{font-size:11.5px}
+  .bento,.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:820px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:18px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));gap:12px}
+  .me{flex-direction:row;align-items:center;flex-wrap:wrap;padding:0}
+  .me img{width:76px;height:76px;border-radius:20px}
+  nav.menu{flex-direction:row;overflow-x:auto;margin:0 -4px;padding-bottom:4px}
+  .menu button{white-space:nowrap;flex:none}
+  .side .foot{display:none}
+  main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .bento,.grid2,.grid3,.lib{grid-template-columns:minmax(0,1fr)}
+  .span2{grid-column:auto}
+  .work{grid-template-columns:minmax(0,1fr)}
+  .tools{flex-direction:column;align-items:flex-start}
+  .tools .lbl{border-right:0;padding-right:0}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi:last-child{grid-column:span 2}
+}
+/* moving background: diagonal pills and soft orbs drifting slowly behind the dashboard */
+:root{--pill-a:#c49ab3;--pill-b:#bdb5e6;--pill-c:#f3cbbf;--orb:#ffffff;--pill-op:.7;--orb-op:.85}
+.app{position:relative;z-index:1}
+.bgfx{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.bgfx .p{position:absolute;height:var(--h,64px);width:var(--w,460px);border-radius:99px;opacity:var(--pill-op);
+  background:linear-gradient(90deg,var(--c1),color-mix(in srgb,var(--c1) 35%,transparent));
+  transform:rotate(-38deg);animation:pill var(--t,26s) ease-in-out infinite alternate;animation-delay:var(--d,0s)}
+.bgfx .o{position:absolute;width:var(--s,38px);height:var(--s,38px);border-radius:50%;background:var(--orb);opacity:var(--orb-op);
+  box-shadow:0 0 24px 6px color-mix(in srgb,var(--orb) 55%,transparent);animation:orb var(--t,14s) ease-in-out infinite alternate;animation-delay:var(--d,0s)}
+@keyframes pill{from{transform:translate(0,0) rotate(-38deg)}to{transform:translate(-90px,70px) rotate(-38deg)}}
+@keyframes orb{from{transform:translate(0,0)}to{transform:translate(-30px,40px)}}
+@media (prefers-reduced-motion:reduce){.bgfx .p,.bgfx .o{animation:none}}
+
+/* mouse widget: coral arrow cursor, a sparkle over anything clickable, confetti on click */
+@media (hover:hover) and (pointer:fine){
+  html,body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M4 3l17 9.5-7.4 1.8L10 21z' fill='%23df6e54' stroke='%23fff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 4 3,auto}
+  a,button,[data-go],[data-zoom],.card{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M16 2c1.2 7.2 6.8 12.8 14 14-7.2 1.2-12.8 6.8-14 14-1.2-7.2-6.8-12.8-14-14C9.2 14.8 14.8 9.2 16 2z' fill='%23df6e54' stroke='%23fff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16,pointer}
+}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+@media (prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+
+/* contact form (saves to Supabase) */
+.cform{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cform label{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.cform .full{grid-column:1/-1}
+.cform input,.cform textarea{font:inherit;font-size:14px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;width:100%}
+.cform textarea{min-height:130px;resize:vertical}
+.cform input:focus,.cform textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.cform .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.cform .status{font-size:13.5px;font-weight:600;align-self:center}
+.cform .status.ok{color:var(--ok)}
+.cform .status.err{color:var(--accent)}
+@media (max-width:820px){.cform{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="bgfx" aria-hidden="true">
+  <span class="p" style="--c1:var(--pill-a);left:72%;top:-4%;--w:520px;--h:70px;--t:28s"></span>
+  <span class="p" style="--c1:var(--pill-b);left:80%;top:8%;--w:420px;--h:60px;--t:22s;--d:-6s"></span>
+  <span class="p" style="--c1:var(--pill-c);left:86%;top:20%;--w:480px;--h:66px;--t:32s;--d:-12s"></span>
+  <span class="p" style="--c1:var(--pill-a);left:90%;top:38%;--w:380px;--h:58px;--t:25s;--d:-3s"></span>
+  <span class="p" style="--c1:var(--pill-c);left:-14%;top:62%;--w:440px;--h:64px;--t:30s;--d:-9s"></span>
+  <span class="p" style="--c1:var(--pill-a);left:-8%;top:78%;--w:520px;--h:70px;--t:24s;--d:-15s"></span>
+  <span class="p" style="--c1:var(--pill-b);left:10%;top:94%;--w:360px;--h:58px;--t:27s;--d:-4s"></span>
+  <span class="p" style="--c1:var(--pill-b);left:45%;top:104%;--w:420px;--h:60px;--t:34s;--d:-20s"></span>
+  <i class="o" style="left:76%;top:-2%;--s:34px;--t:12s"></i>
+  <i class="o" style="left:95%;top:30%;--s:40px;--t:16s;--d:-5s"></i>
+  <i class="o" style="left:8%;top:86%;--s:44px;--t:14s;--d:-8s"></i></div>
+
+<div class="app">
+  <aside class="side">
+    <div class="me">
+      <span class="glow"><img id="sideAvatar" alt="May Anne Guevarra"></span>
+      <div>
+        <div class="name">May Anne Guevarra
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-label="Verified"><path fill="var(--accent)" d="M12 1l2.6 2.2 3.4-.4 1 3.3 3 1.6-1.2 3.3 1.2 3.3-3 1.6-1 3.3-3.4-.4L12 23l-2.6-2.2-3.4.4-1-3.3-3-1.6L3.2 11 2 7.7l3-1.6 1-3.3 3.4.4z"/><path d="M8 12.2l2.6 2.6L16.2 9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="role">AI Automation Specialist for digital marketing businesses</div>
+      </div>
+      <span class="avail">Open to new projects</span>
+      <div class="socials">
+        <a href="https://www.linkedin.com/in/may-guevarra-b3787a165/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C21.6 8.65 22 11.2 22 14.4V21h-4v-5.8c0-1.4-.03-3.2-1.95-3.2-1.95 0-2.25 1.5-2.25 3.1V21h-4z"/></svg></a>
+        <a href="https://www.instagram.com/mrs.yham.gab/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3"/></svg></a>
+        <a href="https://www.facebook.com/mhaye.guevarra/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v7h4v-7H17l.6-4h-4.1V8.9c0-.6.3-.9 1-.9z"/></svg></a>
+        <a href="https://www.upwork.com/freelancers/~018aaba6a874ea4546" target="_blank" rel="noopener" aria-label="Upwork"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.56 13.16c-1.1 0-2.13-.47-3.07-1.23l.23-1.08.01-.04c.2-1.14.85-3.06 2.84-3.06a2.7 2.7 0 0 1 0 5.41zm0-8.14c-2.54 0-4.51 1.65-5.31 4.37-1.22-1.84-2.15-4.04-2.69-5.9H7.83v7.11a2.55 2.55 0 0 1-5.1 0V3.49H0v7.11a5.29 5.29 0 0 0 5.28 5.3 5.29 5.29 0 0 0 5.28-5.3v-1.19c.53 1.11 1.18 2.23 1.98 3.22l-1.68 7.88h2.8l1.21-5.71c1.06.68 2.29 1.11 3.69 1.11a5.45 5.45 0 0 0 0-10.89z"/></svg></a>
+      </div>
+    </div>
+    <nav class="menu" id="menu" aria-label="Sections"></nav>
+    <div class="foot">Metro Manila, PH · Working worldwide</div>
+  </aside>
+
+  <main id="main"></main>
+</div>
+
+<div class="lb" id="lb" hidden><figure style="margin:0"><img id="lbimg" alt=""><p id="lbcap"></p></figure></div>
+
+<script src="config.js"></script>
+<script>
+const CFG = window.SITE_CONFIG || {};
+const MEDIA = (CFG.mediaBase || 'assets').replace(/\/+$/,'');
+// IMG[0] = img-01.jpg ... IMG[18] = img-19.jpg (same order as before)
+const IMG = Array.from({length:19}, (_,i)=>`${MEDIA}/img-${String(i+1).padStart(2,'0')}.jpg`);
+document.getElementById('sideAvatar').src=IMG[0];
+const I = {
+  home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  work:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>',
+  flow:'<rect x="3" y="3" width="7" height="6" rx="1.5"/><rect x="14" y="15" width="7" height="6" rx="1.5"/><path d="M6.5 9v4a2 2 0 0 0 2 2H14"/>',
+  zap:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>',
+  brief:'<path d="M4 6h16M4 12h16M4 18h10"/>',
+  tools:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.6-.5-.5-2.6z"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  award:'<circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/>',
+  play:'<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/>',
+  arrow:'<path d="M7 17L17 7M9 7h8v8"/>',
+  left:'<path d="M15 6l-6 6 6 6"/>'
+};
+const ico = (k,cls='') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${cls}" aria-hidden="true">${I[k]}</svg>`;
+
+const CV = 'https://drive.google.com/file/d/1JHQxmfl1sTPUhs9j2xPeVdAP5t-G5GtH/view?usp=sharing';
+const VID = `${MEDIA}/video-01.mp4`, VID_POSTER = `${MEDIA}/img-20.jpg`;
+
+// Content below is the built-in fallback. When Supabase is configured,
+// rows in the portfolio_content table replace these on page load.
+let WORK = [
+  {n:'Kelly Family Agency', t:'Website · GHL · Booking', s:'Allstate insurance · Pottstown, PA', h:'Website build & full GHL pipeline',
+   d:'Built the agency site in Lovable.dev, then wired the whole client journey through GoHighLevel: custom quote forms feeding the CRM, and booking calendars for auto, home, life and business coverage enquiries.',
+   tags:['Lovable.dev','GoHighLevel','Custom forms','Calendars'], live:'https://kellyagency.us/'},
+  {n:'ZZ Med Spa', t:'Landing pages · ManyChat · SMS', s:'Campaign pages & automation', h:'Campaign pages & Instagram automation',
+   d:'HTML landing pages for laser hair removal campaigns and a consultation booking page with phone and clinic-visit options. ManyChat comment-to-DM flows, Zenoti email templates, Pixel setup and A2P 10DLC registration.',
+   tags:['HTML/CSS','ManyChat','Zenoti','Meta Pixel','A2P 10DLC']},
+  {n:'Harvest AF', t:'GHL · Funnels · Automation', s:'Financial consulting · Legacy Builders Collective', h:'Quiz funnel, intake system & automation',
+   d:'Built the "2026 Tax & Family Wealth Check" quiz funnel, a multi-screen HTML build with tag tracking feeding straight into GHL. Developed a custom "Roadmap Intake" form with inbound webhook submission, email/SMS nurture sequences, a vanilla HTML/JS community dashboard, GHL AI Studio automations and the full harvestaf.net landing page.',
+   tags:['GoHighLevel','HTML/JS','Webhooks','Email/SMS','AI Studio']},
+  {n:'Raise AI', t:'Onboarding · CRM', s:'Client onboarding systems', h:'Onboarding & CRM build-out',
+   d:'Ten months running client onboarding and GoHighLevel setup: sub-account builds, pipelines and the workflows that carry a new client from signup to active.',
+   tags:['GoHighLevel','Onboarding','Pipelines']},
+  {n:'Roxell Richards Law', t:'Law firm · GHL tech', s:'CRM & tech systems', h:'GoHighLevel systems for a law practice',
+   d:'On-call tech specialist across fourteen months: intake automation, CRM upkeep and the integrations that keep case enquiries from slipping between tools.',
+   tags:['GoHighLevel','Intake automation','Integrations']}
+];
+
+let FLOWS = [
+  {img:6, h:'1 to 10 Days Call Route', d:'Ten sequential call attempts, each day its own branch. Contact-changed triggers count the attempts, a tag check routes booked, no-show and not-interested outcomes, and every branch loops back into manual-call assignment and opportunity updates.', tags:['Power dialer','Tag routing']},
+  {img:7, h:'Pre-Booking Follow-Up', d:'Eight parallel follow-up tracks split by tag condition, each running its own wait, email and SMS cadence before rejoining, so a lead in any segment gets a sequence written for that segment.', tags:['Email & SMS','Segmentation']},
+  {img:8, h:'Appointment Booked: Nurture & Reminders', d:'The post-booking lifecycle: confirmation, nurture and reminder steps fanning into ten condition branches, so the messaging matches the appointment type and where the lead came from.', tags:['Reminders','Lifecycle']},
+  {img:9, h:'Instagram Lead Routing', d:'An inbound custom webhook tags the contact, then a per-weekday business-hours check decides where the conversation goes. Outside hours it hands off to Conversation AI; unmatched cases fire a Slack notification.', tags:['Webhook','Conversation AI','Slack']},
+  {img:10, h:'Lead Status → Update Pipeline', d:'Six lead-status triggers each look up the opportunity, then move the pipeline stage or create the opportunity when none is found, with tag checks and assigned-user logic deciding the stage.', tags:['Opportunities','Pipeline logic']},
+  {img:11, h:'Lead Status → Slack & Sheets', d:'Status changes route to the right Slack channel, inbound SMS replies are parsed for reschedule and cancel keywords, and each outcome writes a row to a spreadsheet.', tags:['Slack','Google Sheets','SMS parsing']},
+  {img:12, h:'AI Voice → Conversational AI Handoff', d:'An AI Voice Agent answers every inbound inquiry, an AI classification step reads how the call went and routes it into the matching branch, then Conversational AI sends the SMS and email that fit. Running live inside a client\'s GHL account.', tags:['AI Voice Agent','Conversational AI','SMS/Email']}
+];
+
+let ZAPS = [
+  {img:13, h:'Stripe Payments into Slack & GHL', d:'Every new Stripe payment is logged across three Google Sheets tabs, announced in two Slack channels, and created or updated as a contact in GHL. A filter checks the purchase before tagging the buyer in Kit.', tags:['Stripe','Sheets','Slack','LeadConnector','Kit']},
+  {img:14, h:'Whop Payments into Slack & GHL', d:'The same sales pipeline for purchases made through Whop: rows written to Sheets, team notified in Slack, contact synced to GHL, and a filtered Kit tag for follow-up.', tags:['Whop','Sheets','Slack','Kit']},
+  {img:15, h:'Typeform into GHL Triple Play', d:'A new Typeform application adds the lead to a Kit nurture sequence and creates or updates an opportunity in the GHL pipeline from a single form submission.', tags:['Typeform','Kit','LeadConnector']},
+  {img:16, h:'Skool Membership Alerts', d:'Membership question answers from new Skool community joiners are posted straight to Slack so the team can review and approve them quickly.', tags:['Skool','Slack']},
+  {img:17, h:'The Full Zap Library', d:'Twenty-plus live Zaps: Calendly bookings into GHL, Stripe and UTM sources into Sheets for attribution, a webhook driving webinar automations, Typeform-to-Slack alerts and GHL-to-Kit blueprints.', tags:['Calendly','Webhooks','UTM tracking'], extra:18}
+];
+
+let SITES = [
+  ['GHL Funnel Preview','GoHighLevel funnel','https://sites.leadconnectorhq.com/preview/GS0c7aKXxjlXJYwDyegP'],
+  ['Future At Home Care','Home care','https://futureathomecare.net/home-page'],
+  ['Excelora','Maths tutoring','https://excelora.co.uk/'],
+  ['Lyceum Tutors','Psychology tutoring','https://lyceumtutors.co.uk/home-page'],
+  ['Lambda Tuition','Computer science tutoring','https://go.lambdatuition.com/home-page'],
+  ['Provider Man Plan','Website','https://providermanplan.com/'],
+  ['Sweet2Elite','Website','https://www.sweet2elite.com/'],
+  ['X Virtual Assistants','Website','https://xvirtualassistants.com/'],
+  ['Kelly Family Agency','Insurance agency','https://kellyfamilyagency.com/'],
+  ['Allbright Start','Website','https://allbrightstart.com/home-page'],
+  ['Excel English','English tutoring','https://excelmeenglish.com/home-page'],
+  ['Ethos Learning','Science tutoring','https://ethoslearning.co/home-page'],
+  ['K8 Creative','Drama & LAMDA tutoring','https://go.k8creative.co.uk/home-page'],
+  ['Rise Tutoring','SATs & 11+ tutoring','https://rise-tutoring.co.uk/home-page'],
+  ['The Italian Way by Aurora','Language lead magnet','https://theitalianwaybyaurora.com/lead-magnet'],
+  ['Tang Tutoring','GCSE, A-Level & UCAT','https://tangtutoring.co.uk/home-page']
+];
+
+let LIB = [
+  [1,'Coaching funnels, decks and presenters'],[2,'Pitch decks, landing pages and registration funnels'],
+  [3,'Blueprints, funnels and member hubs'],[4,'Athlete systems, audits and dashboards'],[5,'E-commerce stores, brand sites and webinar pages']
+];
+
+let EXP = [
+  {d:'Apr 2026 — Present', now:1, n:'ZZ Med Spa', r:'GHL Expert / Automation Specialist', p:'HTML landing pages for laser hair removal campaigns and a consultation booking page. Facebook lead forms flow into the GHL CRM, and uncontacted leads are pushed by webhook into the sales call queue. Meta Pixel, ManyChat comment-to-DM and Reels campaigns.', tags:['GoHighLevel','Meta Ads','Funnels'], cs:'https://drive.google.com/file/d/16F-PssfplhQJb5dy84u_BKpJMU0748hL/view?usp=drive_link'},
+  {d:'Feb 2026 — Present', now:1, n:'Harvest AF', r:'GHL Expert', p:'Ran the full website and business automations in GHL for a tax preparation business: the "2026 Tax & Family Wealth Check" quiz funnel, a custom Roadmap Intake form with webhook submission, and email/SMS nurture sequences.', tags:['GoHighLevel','Funnels','Webhooks'], cs:'https://drive.google.com/file/d/1rMqwvc9zvmrdi4sqZe6v9-hm7UqmIv-Q/view?usp=drive_link'},
+  {d:'Feb 2026 — Apr 2026', n:'Kelly Family Agency', r:'GHL Expert · Project-based', p:'Built the Allstate agency website in Lovable.dev and connected the client journey through GoHighLevel: custom quote forms, Conversation AI booking, a webinar path and on-page SEO.', tags:['GoHighLevel','Funnels','On-page SEO'], cs:'https://drive.google.com/file/d/1p8eM10ZzTdFJIO5wve7j0hlrB64AU8fL/view?usp=drive_link', live:'https://kellyagency.us/'},
+  {d:'Aug 2024 — Oct 2025', n:'Roxell Richards Injury Law', r:'GHL Expert / Tech Specialist', p:'Built the firm\'s website from scratch and reworked intake. Each case type has its own lead form, and signed cases go to monday.com, tagging the attorney who handles them.', tags:['GoHighLevel','Website','Intake automation'], cs:'https://drive.google.com/file/d/1TzFimzUioMurNr0iKw5YsJmKastAltQw/view?usp=sharing'},
+  {d:'Sep 2024 — Jul 2025', n:'Raise AI', r:'GHL Expert / Onboarding Specialist', p:'Built the GoHighLevel agency for a capital-raising SaaS offer from scratch, including sub-account setup, snapshots, pipelines and client onboarding.', tags:['GoHighLevel','SaaS','Onboarding'], cs:'https://drive.google.com/file/d/1wewFcQSBzNBKQwWXPB2qMMkE1hjU0BH5/view?usp=drive_link'},
+  {d:'Aug 2025 — Nov 2025', n:'Advanced Agent Marketing', r:'GHL Expert / Onboarding Specialist'},
+  {d:'Feb 2024 — Oct 2024', n:'DSOA Dance School', r:'GHL Expert / Onboarding Specialist'},
+  {d:'Aug 2023 — Feb 2024', n:'Graystone Media Trading', r:'Appointment Setter / Marketing VA for GHL'},
+  {d:'Mar 2022 — Jan 2023', n:'Oscar Realtor LLC', r:'GHL Specialist'},
+  {d:'Jan 2022 — Nov 2022', n:'Sheik Media', r:'GHL Specialist'}
+];
+
+let SERVICES = [
+  ['AI Automation','AI agents and workflows that run your marketing follow-up on their own.'],
+  ['CRM Systems','GoHighLevel, HubSpot and Salesforce: pipelines, workflows and clean data.'],
+  ['Integrations','Zapier, Make.com, n8n, ManyChat and webhooks connecting your tools.'],
+  ['Funnels & Websites','High-converting funnels and custom-coded pages.'],
+  ['Ads, SEO & Tracking','Meta Ads, Pixel and CAPI setup, on- and off-page SEO.'],
+  ['Front-End Development','HTML, CSS, JavaScript, JSON and Python.']
+];
+
+let APPROACH = [
+  ['Systems that don\'t break at volume','Pipelines, workflows and integrations built to hold up once lead volume increases, not just to work in a demo.',['GoHighLevel','HubSpot','Salesforce','n8n','Make.com','Zapier']],
+  ['Custom code where off-the-shelf stops','Custom-coded funnel pages, API integrations and automation logic no drag-and-drop builder can handle.',['HTML / CSS / JS','Python','Node.js','SQL']],
+  ['AI agents that never miss a lead','Voice and chat agents qualify and follow up with every inquiry the moment it comes in.',['AI voice agents','AI chat agents','Auto follow-up']],
+  ['Support built from support experience','I\'ve onboarded clients onto GoHighLevel, HubSpot and Kartra myself, so I build systems your team can run day to day.',['Client onboarding','CRM training','Ongoing support']]
+];
+
+let ADS = [
+  ['Keyword & competitor research','Google Keyword Planner and Ahrefs for volume, difficulty and gap analysis, benchmarked against direct competitors.',['Keyword Planner','Ahrefs']],
+  ['On-page SEO','H1–H3 structure, CTR-focused meta titles and descriptions, site speed and a silo structure so authority flows to the pages that need to rank.',['Header tags','Site speed','Silo structure']],
+  ['Off-page SEO & outreach','Backlinks through targeted outreach, plus community links on Quora and Reddit for early domain trust.',['Backlinks','Quora','Reddit']],
+  ['Meta campaigns judged on booked calls','The ad gets the click and GHL turns the lead into a booked call, so campaigns are judged on cost per booked call, reading the chain from CPM to CTR, CPL and ROAS.',['CPM','Link CTR','CPL','ROAS']],
+  ['CAPI & GHL attribution','Conversions API sends GHL conversion data to Meta alongside the pixel, and every lead is tagged with source and UTMs.',['Conversions API','UTM tagging']],
+  ['Creative & VSLs','Campaign graphics and carousels in Canva, VSL edits and short-form cuts in CapCut, so ads, pages and follow-up look like one brand.',['Canva','CapCut','VSLs']]
+];
+
+let TOOLKIT = {
+  'CRM & automation':['GoHighLevel','n8n','Make.com','Zapier','ManyChat','HubSpot','Salesforce','ClickFunnels','Mailchimp'],
+  'Code':['HTML','CSS','JavaScript','JSON','Python','Node.js','SQL'],
+  'Ads & SEO':['Meta Ads','Meta Business Suite','Facebook Ads Manager','Ahrefs','Google Keyword Planner','SiteGround','SEO outreach'],
+  'Sales & commerce':['Apollo.io','LinkedIn Sales Navigator','Shopify','Gorgias'],
+  'Creative':['Canva','CapCut','HeyGen','Higgsfield'],
+  'Team & ops':['ClickUp','Asana','Trello','Slack','Google Suite']
+};
+
+let KPIS = [
+  {n:2022, from:2000, label:'Building automations since'},
+  {n:10, label:'Client teams served'},
+  {n:16, label:'Live funnels & sites'},
+  {n:33, label:'Lovable builds'},
+  {n:20, suf:'+', label:'Live Zaps in one account'}
+];
+
+let LOVABLE_BUILDS = ['Signal System Deck','Traffic Light Presenter','Signal Funnel','Zacc Funnel Steps','Athlete Reset System','Next Chapter Builder','EBA Pitchdeck','SmartStickx Landing Page','Blueprint Registration Pages','Truck Run System','Flocka Fadez Funnel','Chef Andrea','Capital Ready Funnel','The First Deal Blueprint','Capital Navigator','Athlete OS Discovery','Athlete Hub Connect','Shop Revenue Audit','Operator System Builder','Outdoor Adventures Hub','Sutra Maison Luxury','ROC Pitchdeck','Visual Concept Mockup','AI Scale Webinar','City Line Liquors Online',"Jared's Bat Hub"];
+
+let CREDENTIALS = [
+  {t:'BSBA, Business Management', short:'University of the East · 2009–2013', date:'2009–2013', p:'University of the East'},
+  {t:'GoHighLevel In-Depth Course', short:'April – May 2021', date:'April – May 2021', p:'Platform certification training'},
+  {t:'n8n Automation System Tool', short:'In-depth course · 2024–2025', date:'2024–2025', p:'In-depth course'}
+];
+
+const NAV = [
+  ['home','Home','home'],['intro','Intro Video','play'],['work','Selected Work','work'],['workflows','GHL Workflows','flow'],['zapier','Zapier Builds','zap'],
+  ['lovable','Lovable Library','layers'],['funnels','Live Funnels','globe'],['experience','Experience','brief'],
+  ['services','Services','spark'],['toolkit','Toolkit','tools'],['contact','Contact','mail']
+];
+
+const tags = a => `<div class="tags">${a.map(t=>`<span class="tag">${t}</span>`).join('')}</div>`;
+const head = (icon,title,sub,go=true) => `<div class="ch"><div class="ic">${ico(icon)}</div><div><h2>${title}</h2><p>${sub}</p></div>${go?`<span class="go">${ico('arrow')}</span>`:''}</div>`;
+const viewHead = (eb,title,lede) => `<div class="view-head"><button class="back" data-go="home">${ico('left')} Dashboard</button></div><p class="eyebrow">${eb}</p><h1>${title}</h1><p class="lede">${lede}</p>`;
+const zoomable = (i,cap) => `<div class="shot" data-zoom="${i}" data-cap="${cap.replace(/"/g,'&quot;')}" role="button" tabindex="0" aria-label="Enlarge: ${cap.replace(/"/g,'&quot;')}"><img src="${IMG[i]}" alt="${cap.replace(/"/g,'&quot;')}" loading="lazy"></div>`;
+
+const V = {
+home: () => `
+  <div class="top">
+    <div>
+      <h1>Build it once. <em>Let it run.</em></h1>
+      <p class="lede">I'm an AI Automation Specialist for digital marketing businesses. I connect GoHighLevel, HubSpot, Salesforce and the rest of your stack into one simpler working system, so leads stop falling through the gaps between tools.</p>
+    </div>
+    <div class="btnrow"><button class="btn ghost" data-go="intro">▶ Watch my intro</button><a class="btn ghost" href="${CV}" target="_blank" rel="noopener">Check my CV</a><button class="btn dark" data-go="contact">Get in touch</button></div>
+  </div>
+  <div class="tools">
+    <div class="lbl">Daily drivers<b>Tools I work with</b></div>
+    <div class="marquee"><div class="track">${[0,1].map(k=>`<div class="grp"${k?' aria-hidden="true"':''}>${[['GoHighLevel','#3b82f6'],['n8n','#ea4b71'],['Make.com','#8b5cf6'],['Zapier','#ff4f00'],['ManyChat','#2f9be0'],['Lovable','#e8578b'],['Meta Ads','#1877f2'],['HubSpot','#ff7a59'],['Salesforce','#00a1e0'],['Slack','#4a154b'],['Canva','#00c4cc'],['Claude','#d97757']].map(([n,c])=>`<span><i style="--c:${c}"></i>${n}</span>`).join('')}</div>`).join('')}</div></div>
+  </div>
+  <div class="kpis">
+    ${KPIS.map(k=>`<div class="kpi"><b data-n="${k.n}"${k.from!=null?` data-from="${k.from}"`:''}${k.suf?` data-suf="${k.suf}"`:''}>${k.n}${k.suf||''}</b><span>${k.label.replace(/&/g,'&amp;')}</span></div>`).join('')}
+  </div>
+  <div class="bento">
+    <button class="card span2" data-go="work">
+      ${head('work','Selected Work','Five client builds: what I built and the stack behind it.')}
+      <div class="work">
+        <div class="wlist">${WORK.map(w=>`<div><b>${w.n}</b><span>${w.t.split(' · ')[0]}</span></div>`).join('')}</div>
+        <div class="shot" style="aspect-ratio:16/10"><img src="${IMG[1]}" alt="Lovable project library"></div>
+      </div>
+    </button>
+    <button class="card" data-go="experience">
+      ${head('user','About','Who I am and how I work.')}
+      <div class="about"><img src="${IMG[0]}" alt=""><p><b>AI automation specialist based in Metro Manila.</b> I come from customer support and SaaS onboarding, so I build systems your team can actually run day to day.</p></div>
+      <div class="flow"><span>Lead</span><i>→</i><span>Page</span><i>→</i><span>Pipeline</span><i>→</i><span>Follow-up</span><i>→</i><span>Booked</span></div>
+    </button>
+
+    <button class="card" data-go="workflows">
+      ${head('flow','GHL Workflows','Seven live production automations.')}
+      <div class="shot" style="aspect-ratio:16/9"><img src="${IMG[12]}" alt="AI Voice Agent workflow"></div>
+      <div class="list">${FLOWS.slice(0,3).map(f=>`<div class="li">${f.h}<small>GHL</small></div>`).join('')}</div>
+    </button>
+    <button class="card" data-go="services">
+      ${head('spark','Services','What I build for digital marketing businesses.')}
+      <div class="list">${SERVICES.map((s,i)=>`<div class="li">${s[0]}<small>0${i+1}</small></div>`).join('')}</div>
+    </button>
+    <button class="card" data-go="experience">
+      ${head('brief','Experience','Where I\'ve worked, with case studies.')}
+      <div class="tl">${EXP.slice(0,4).map(e=>`<div><span class="d">${e.d.replace(' — ','<br>')}</span><b>${e.n}</b><span class="${e.now?'now':''}">${e.r}</span></div>`).join('')}</div>
+    </button>
+
+    <button class="card" data-go="zapier">
+      ${head('zap','Zapier Builds','Payments, forms and bookings synced to GHL.')}
+      <div class="shot" style="aspect-ratio:16/9"><img src="${IMG[13]}" alt="Stripe Zap"></div>
+      ${tags(['Stripe','Whop','Typeform','Skool','Kit','Slack'])}
+    </button>
+    <button class="card" data-go="funnels">
+      ${head('globe','Live Funnels','Sixteen sites and funnels you can open now.')}
+      <div class="list">${SITES.slice(1,6).map(s=>`<div class="li">${s[0]}<small>${s[1]}</small></div>`).join('')}</div>
+    </button>
+    <button class="card" data-go="lovable">
+      ${head('layers','Lovable Library','Funnels, decks, hubs and stores.')}
+      <div class="shot" style="aspect-ratio:16/9"><img src="${IMG[5]}" alt="Lovable e-commerce and webinar builds"></div>
+      ${tags(['Sales funnels','Pitch decks','Member hubs','Stores'])}
+    </button>
+
+    <button class="card" data-go="toolkit">
+      ${head('award','Credentials','Education and training.')}
+      <div class="cred">${CREDENTIALS.map(c=>`<div><span>${c.t}<small>${c.short}</small></span></div>`).join('')}</div>
+    </button>
+    <button class="card contact span2" data-go="contact">
+      ${head('mail','Let\'s work together','Open to full-time and contract work.')}
+      <p class="big">Send over what you're working on and I'll tell you honestly whether I'm the right fit.</p>
+      <div class="btnrow"><span class="btn" style="background:var(--accent);color:#fff">Get in touch →</span></div>
+    </button>
+  </div>`,
+
+intro: () => viewHead('Meet May Anne','Intro Video','A two-minute introduction to who I am, how I work and the platforms I build on. Press play and turn the sound on.') +
+  `<div class="intro">
+    <div class="vid"><video src="${VID}" poster="${VID_POSTER}" controls playsinline preload="metadata" aria-label="Introduction video from May Anne Guevarra"></video></div>
+    <article class="panel">
+      <h3>Hi, I'm May Anne</h3>
+      <p class="role-line">AI Automation Specialist for digital marketing businesses</p>
+      <p>I help you create a simpler working system for your business. I connect the tools you already use, from GoHighLevel to HubSpot, Salesforce and many more, so leads, follow-up and reporting run on their own instead of through a pile of manual steps.</p>
+      <div class="list">
+        <div class="li">Based in<small>Metro Manila, PH</small></div>
+        <div class="li">Tools<small>GHL · HubSpot · Salesforce · more</small></div>
+        <div class="li">Available for<small>Full-time &amp; contract</small></div>
+      </div>
+      <div class="btnrow"><button class="btn dark" data-go="work">See my work</button><button class="btn ghost" data-go="contact">Get in touch</button></div>
+    </article>
+  </div>`,
+
+work: () => viewHead('Recent builds','Selected Work','Client builds across GoHighLevel, custom-coded pages and automation, with the stack used on each.') +
+  `<div class="grid2">${WORK.map(w=>`<article class="panel">
+    <p class="meta">${w.t}</p><h3>${w.n}</h3><p class="meta" style="text-transform:none;letter-spacing:0;font-family:var(--f-body);font-size:13px">${w.s}</p>
+    <p style="color:var(--ink);font-weight:600">${w.h}</p><p>${w.d}</p>${tags(w.tags)}
+    ${w.live?`<a class="link" href="${w.live}" target="_blank" rel="noopener">Visit the live site ↗</a>`:''}</article>`).join('')}</div>`,
+
+workflows: () => viewHead('Production workflows · GoHighLevel','Custom Automations','Live automations I\'ve built: call routing, follow-up cadences, lead routing and cross-platform notifications. Click any screenshot to enlarge it.') +
+  `<div class="grid2">${FLOWS.map((f,i)=>`<article class="panel">${zoomable(f.img,f.h)}<span class="num">${String(i+1).padStart(2,'0')}</span><h3>${f.h}</h3><p>${f.d}</p>${tags(f.tags)}</article>`).join('')}</div>`,
+
+zapier: () => viewHead('Production Zaps · Built for a TutorEasily sub-account','Zapier Automations','The Zapier layer that connects payments, forms, community sign-ups and bookings back to GHL, Slack, Google Sheets and Kit, so every sale and lead lands in the right place.') +
+  `<div class="grid2">${ZAPS.map((z,i)=>`<article class="panel">${zoomable(z.img,z.h)}${z.extra?zoomable(z.extra,z.h+' (continued)'):''}<span class="num">${String(i+1).padStart(2,'0')}</span><h3>${z.h}</h3><p>${z.d}</p>${tags(z.tags)}</article>`).join('')}</div>`,
+
+lovable: () => viewHead('Built in Lovable · 33 builds','Lovable Website Library','Sales funnels, webinar and registration pages, pitch decks, live-training presenters, member hubs, audit tools and e-commerce stores for coaches, athletes, barbers, real estate, retail and food businesses.') +
+  `<div class="lib">${LIB.map(([i,c])=>zoomable(i,c)).join('')}</div>
+   <h2 class="sec">Builds in the library</h2>
+   <div class="chips">${LOVABLE_BUILDS.map(n=>`<span>${n}</span>`).join('')}</div>`,
+
+funnels: () => viewHead('Live builds','Sample Funnels & Landing Pages','Websites, funnels and landing pages I\'ve built and launched. Each one opens the live site in a new tab.') +
+  `<div class="grid3">${SITES.map(s=>`<a class="site" href="${s[2]}" target="_blank" rel="noopener"><span class="av">${s[0][0]}</span><span style="min-width:0"><b>${s[0]}</b><small>${s[1]}</small></span><span class="arr">↗</span></a>`).join('')}</div>`,
+
+experience: () => viewHead('Where I\'ve worked','Experience','GoHighLevel, funnels and paid acquisition work since 2022. Open a case study for the full build.') +
+  `<div class="grid2">${EXP.filter(e=>e.p).map(e=>`<article class="panel"><p class="meta ${e.now?'now':''}">${e.d}</p><h3>${e.n}</h3><p style="color:var(--ink);font-weight:600;font-size:13.5px">${e.r}</p><p>${e.p}</p>${tags(e.tags)}
+    <div class="btnrow"><a class="link" href="${e.cs}" target="_blank" rel="noopener">See my case study →</a>${e.live?`<a class="link" href="${e.live}" target="_blank" rel="noopener">Live site ↗</a>`:''}</div></article>`).join('')}</div>
+   <h2 class="sec">Earlier roles</h2>
+   <div class="panel"><div class="tl">${EXP.filter(e=>!e.p).map(e=>`<div><span class="d">${e.d.replace(' — ','<br>')}</span><b>${e.n}</b><span>${e.r}</span></div>`).join('')}</div></div>
+   <h2 class="sec">Other case study</h2>
+   <article class="panel">
+     <p class="meta">Case study</p>
+     <h3>Other case study</h3>
+     <p>Another client build, written up in full.</p>
+     <div class="btnrow"><a class="link" href="https://drive.google.com/file/d/1EnfUswlP_OETKDsfXgoya-Pw2o1JpGsT/view?usp=drive_link" target="_blank" rel="noopener">See my case study →</a></div>
+   </article>`,
+
+services: () => viewHead('What I do','Services & Approach','AI automation for digital marketing businesses: one simpler working system across your CRM, funnels, ads and follow-up, whichever tools you run on.') +
+  `<div class="grid3">${SERVICES.map((s,i)=>`<article class="panel"><span class="num">0${i+1}</span><h3>${s[0]}</h3><p>${s[1]}</p></article>`).join('')}</div>
+   <h2 class="sec">How I help you scale</h2>
+   <div class="grid2">${APPROACH.map(a=>`<article class="panel"><h3>${a[0]}</h3><p>${a[1]}</p>${tags(a[2])}</article>`).join('')}</div>
+   <h2 class="sec">SEO, Meta Ads &amp; creative</h2>
+   <div class="grid3">${ADS.map(a=>`<article class="panel"><h3>${a[0]}</h3><p>${a[1]}</p>${tags(a[2])}</article>`).join('')}</div>
+   <h2 class="sec">Who I build for</h2>
+   <div class="chips">${['Med spas','Law firms','Real estate','Financial consulting','Insurance','Home services','SaaS & agencies','…and yours'].map(n=>`<span>${n}</span>`).join('')}</div>`,
+
+toolkit: () => viewHead('What I work with','Toolkit & Credentials','The platforms, languages and tools I use day to day.') +
+  `<div class="grid3">${Object.entries(TOOLKIT).map(([k,v])=>`<article class="panel"><h3>${k}</h3><div class="chips">${v.map(n=>`<span>${n}</span>`).join('')}</div></article>`).join('')}</div>
+   <h2 class="sec">Education &amp; training</h2>
+   <div class="grid3">${CREDENTIALS.map(c=>`<article class="panel"><p class="meta">${c.date}</p><h3>${c.t}</h3><p>${c.p}</p></article>`).join('')}</div>`,
+
+contact: () => viewHead('Let\'s work together','Let\'s build something that converts','Open to full-time and contract work in GoHighLevel, automation and front-end builds. Send over what you\'re working on and I\'ll tell you honestly whether I\'m the right fit.') +
+  `<div class="grid2">
+    <article class="panel"><h3>Reach me</h3>
+      ${['anne.villanueva1122@gmail.com','yham.gabriel11@gmail.com','0927 790 9450'].map(v=>`<div class="copy"><span>${v}</span><button data-copy="${v}">Copy</button></div>`).join('')}
+      <p>Metro Manila · Working worldwide</p></article>
+    <article class="panel"><h3>Before we talk</h3><p>My CV has the full history, tools and references.</p>
+      <div class="btnrow"><a class="btn dark" href="${CV}" target="_blank" rel="noopener">Check my CV →</a><button class="btn ghost" data-go="experience">Read case studies</button></div></article>
+  </div>
+  <h2 class="sec">Send me a message</h2>
+  <article class="panel">
+    <form class="cform" id="cform" novalidate>
+      <label>Name<input name="name" required maxlength="120" autocomplete="name"></label>
+      <label>Email<input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+      <label class="full"><span>Company <span style="font-weight:400">(optional)</span></span><input name="company" maxlength="160" autocomplete="organization"></label>
+      <label class="full">What are you working on?<textarea name="message" required maxlength="5000"></textarea></label>
+      <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+      <div class="btnrow full"><button class="btn dark" type="submit">Send message →</button><span class="status" role="status" aria-live="polite"></span></div>
+    </form>
+  </article>`
+};
+
+const menu = document.getElementById('menu'), main = document.getElementById('main');
+menu.innerHTML = NAV.map(([k,l,i])=>`<button data-go="${k}">${ico(i)}${l}</button>`).join('');
+
+function show(k, push=true){
+  if(!V[k]) k='home';
+  main.innerHTML = `<div class="view">${V[k]()}</div>`;
+  menu.querySelectorAll('button').forEach(b=>b.setAttribute('aria-current', b.dataset.go===k));
+  if(push){ try{ history.replaceState(null,'', k==='home' ? location.pathname : '#'+k) }catch(e){} window.scrollTo({top:0}) }
+}
+document.addEventListener('click', e=>{
+  const g = e.target.closest('[data-go]'); if(g){ show(g.dataset.go); return }
+  const z = e.target.closest('[data-zoom]'); if(z){ openLb(z); return }
+  const c = e.target.closest('[data-copy]');
+  if(c){ const v=c.dataset.copy; const done=()=>{c.textContent='Copied'; setTimeout(()=>c.textContent='Copy',1500)};
+    try{ navigator.clipboard.writeText(v).then(done,()=>sel(c)) }catch(err){ sel(c) } return }
+  if(e.target.closest('#lb')) document.getElementById('lb').hidden = true;
+});
+function sel(c){ const r=document.createRange(); r.selectNodeContents(c.previousElementSibling); const s=getSelection(); s.removeAllRanges(); s.addRange(r) }
+function openLb(z){ const lb=document.getElementById('lb'); document.getElementById('lbimg').src=z.querySelector('img').src; document.getElementById('lbcap').textContent=z.dataset.cap; lb.hidden=false }
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') document.getElementById('lb').hidden=true;
+  if(e.key==='Enter' && e.target.matches('[data-zoom]')) openLb(e.target);
+});
+show((location.hash||'').slice(1)||'home', false);
+
+// ---- Supabase (REST, no library needed) ----
+const SB = CFG.supabaseUrl && CFG.supabaseAnonKey ? {
+  url: CFG.supabaseUrl.replace(/\/+$/,'') + '/rest/v1',
+  headers: { apikey: CFG.supabaseAnonKey, Authorization: 'Bearer ' + CFG.supabaseAnonKey, 'Content-Type': 'application/json' }
+} : null;
+
+// Load content rows and swap them in for the built-in fallback above
+(async function(){
+  if(!SB) return;
+  try{
+    const r = await fetch(SB.url + '/portfolio_content?select=key,data', { headers: SB.headers });
+    if(!r.ok) throw new Error(r.status);
+    const set = { WORK:v=>WORK=v, FLOWS:v=>FLOWS=v, ZAPS:v=>ZAPS=v, SITES:v=>SITES=v, LIB:v=>LIB=v, EXP:v=>EXP=v,
+                  SERVICES:v=>SERVICES=v, APPROACH:v=>APPROACH=v, ADS:v=>ADS=v, TOOLKIT:v=>TOOLKIT=v,
+                  KPIS:v=>KPIS=v, LOVABLE_BUILDS:v=>LOVABLE_BUILDS=v, CREDENTIALS:v=>CREDENTIALS=v };
+    (await r.json()).forEach(row=>{ if(set[row.key] && row.data) set[row.key](row.data) });
+    const cur = (location.hash||'').slice(1)||'home';
+    if(cur!=='contact') show(cur, false); // don't wipe a half-typed message
+  }catch(e){ console.warn('Supabase content not loaded, using built-in content.', e) }
+})();
+
+// Contact form -> messages table
+document.addEventListener('submit', async e=>{
+  if(e.target.id!=='cform') return;
+  e.preventDefault();
+  const f = e.target, st = f.querySelector('.status'), btn = f.querySelector('button[type=submit]');
+  const d = Object.fromEntries(new FormData(f));
+  st.className = 'status';
+  if(d.website){ st.textContent = 'Thanks!'; return } // bot trap
+  if(!d.name.trim() || !d.message.trim() || !/^\S+@\S+\.\S+$/.test(d.email)){
+    st.className = 'status err'; st.textContent = 'Please add your name, a valid email and a message.'; return }
+  if(!SB){ st.className = 'status err'; st.textContent = 'Form isn\'t connected yet. Please email me directly.'; return }
+  btn.disabled = true; st.textContent = 'Sending…';
+  try{
+    const r = await fetch(SB.url + '/messages', { method:'POST', headers:{...SB.headers, Prefer:'return=minimal'},
+      body: JSON.stringify({ name:d.name.trim(), email:d.email.trim(), company:d.company.trim()||null, message:d.message.trim() }) });
+    if(!r.ok) throw new Error(r.status);
+    f.reset(); st.className = 'status ok'; st.textContent = 'Message sent. I\'ll get back to you soon.';
+  }catch(err){ st.className = 'status err'; st.textContent = 'Something went wrong. Please email me directly.' }
+  finally{ btn.disabled = false }
+});
+
+// stat tiles roll up from zero each time the mouse enters the row
+(function(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  function roll(row){
+    row.querySelectorAll('b[data-n]').forEach(el=>{
+      const to=+el.dataset.n, from=+(el.dataset.from||0), suf=el.dataset.suf||'', t0=performance.now(), dur=1100;
+      cancelAnimationFrame(el._raf);
+      (function step(now){
+        const p=Math.min((now-t0)/dur,1), e=1-Math.pow(1-p,3);
+        el.textContent=Math.round(from+(to-from)*e)+suf;
+        if(p<1) el._raf=requestAnimationFrame(step);
+      })(t0);
+    });
+  }
+  document.addEventListener('mouseover',e=>{
+    const row=e.target.closest('.kpis');
+    if(row && !(e.relatedTarget && row.contains(e.relatedTarget))) roll(row);
+  });
+})();
+
+// crisp "tap" sound on every click or tap, made with Web Audio so no sound file is needed:
+// a very short filtered noise tick plus a tiny low knock, like a fingertip on glass
+(function(){
+  let ac, noise;
+  addEventListener('pointerdown',()=>{
+    try{
+      ac = ac || new (window.AudioContext||window.webkitAudioContext)();
+      if(ac.state==='suspended') ac.resume();
+      if(!noise){
+        noise = ac.createBuffer(1, Math.floor(ac.sampleRate*.03), ac.sampleRate);
+        const d = noise.getChannelData(0);
+        for(let i=0;i<d.length;i++) d[i] = (Math.random()*2-1) * Math.pow(1-i/d.length, 4);
+      }
+      const t=ac.currentTime;
+      const src=ac.createBufferSource(), bp=ac.createBiquadFilter(), g1=ac.createGain();
+      src.buffer=noise; bp.type='bandpass'; bp.frequency.value=3200; bp.Q.value=1.4; g1.gain.value=.55;
+      src.connect(bp).connect(g1).connect(ac.destination); src.start(t);
+      const o=ac.createOscillator(), g2=ac.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(120,t+.04);
+      g2.gain.setValueAtTime(.12,t); g2.gain.exponentialRampToValueAtTime(.0001,t+.05);
+      o.connect(g2).connect(ac.destination); o.start(t); o.stop(t+.06);
+    }catch(e){}
+  });
+})();
+
+// confetti burst wherever you click or tap (skipped for reduced motion)
+(function(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  const cv=document.createElement('canvas'); cv.id='confetti'; document.body.append(cv);
+  const cx=cv.getContext('2d'), COLORS=['#df6e54','#f4a259','#7b6cf6','#2d2660','#5fcf9a','#f7c8d6'];
+  let bits=[], running=false;
+  function size(){ const r=devicePixelRatio||1; cv.width=innerWidth*r; cv.height=innerHeight*r; cx.setTransform(r,0,0,r,0,0) }
+  size(); addEventListener('resize',size);
+  addEventListener('pointerdown',e=>{
+    for(let i=0;i<34;i++){
+      const a=Math.random()*Math.PI*2, s=3+Math.random()*6;
+      bits.push({x:e.clientX,y:e.clientY,vx:Math.cos(a)*s,vy:Math.sin(a)*s-3,r:Math.random()*6.3,vr:(Math.random()-.5)*.4,
+        w:5+Math.random()*5,h:3+Math.random()*4,c:COLORS[i%COLORS.length],life:1,round:Math.random()<.3});
+    }
+    if(!running){ running=true; requestAnimationFrame(tick) }
+  });
+  function tick(){
+    cx.clearRect(0,0,innerWidth,innerHeight);
+    bits=bits.filter(b=>b.life>0);
+    for(const b of bits){
+      b.vy+=.22; b.vx*=.98; b.x+=b.vx; b.y+=b.vy; b.r+=b.vr; b.life-=.014;
+      cx.save(); cx.globalAlpha=Math.max(b.life,0); cx.translate(b.x,b.y); cx.rotate(b.r); cx.fillStyle=b.c;
+      if(b.round){ cx.beginPath(); cx.arc(0,0,b.h/1.5,0,7); cx.fill() } else cx.fillRect(-b.w/2,-b.h/2,b.w,b.h);
+      cx.restore();
+    }
+    if(bits.length) requestAnimationFrame(tick); else { running=false; cx.clearRect(0,0,innerWidth,innerHeight) }
+  }
+})();
+</script>
+
+</body>
+</html>
