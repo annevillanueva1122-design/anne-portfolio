@@ -623,11 +623,12 @@ export const fallbackContent: Content = {
       "tools": [
         "HTML",
         "CSS",
-        "JavaScript",
+        "JavaScript (Vanilla)",
         "JSON",
         "Python",
         "Node.js",
-        "SQL"
+        "SQL",
+        "React"
       ]
     },
     {
@@ -668,6 +669,14 @@ export const fallbackContent: Content = {
         "Trello",
         "Slack",
         "Google Suite"
+      ]
+    },
+    {
+      "name": "Build & deploy",
+      "tools": [
+        "GitHub",
+        "Vercel",
+        "Supabase"
       ]
     }
   ],
