@@ -496,7 +496,7 @@ export const fallbackContent: Content = {
     {
       "section": "service",
       "title": "Front-End Development",
-      "body": "HTML, CSS, JavaScript, JSON and Python.",
+      "body": "HTML, CSS, JavaScript, JSON and Python, plus AI app builders like Lovable, Replit and Base44.",
       "tags": []
     },
     {
