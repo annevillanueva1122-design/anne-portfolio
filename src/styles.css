@@ -367,3 +367,15 @@ main{padding-block:28px 48px;padding-left:max(16px,2.4vw);padding-right:max(16px
   .bento .ch h2 { flex: none; font-size: 16px; }
   .bento .ch p { font-size: 13px; }
 }
+
+/* ===== Faded / frosted panels that blend with the background ===== */
+:root{ --glass: rgba(255, 250, 248, .52); --glass-line: rgba(255, 255, 255, .7); }
+.side, .tools, .kpi, .bento{
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-color: var(--glass-line);
+}
+.side{ border-right-color: rgba(230, 221, 239, .6); }
+.tools, .kpi, .bento{ box-shadow: 0 1px 2px #2d266008, 0 10px 30px -18px #2d266024; }
+.bento > .card{ border-bottom-color: rgba(230, 221, 239, .7); }
