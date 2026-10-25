@@ -389,3 +389,11 @@ main{padding-block:28px 48px;padding-left:max(16px,2.4vw);padding-right:max(16px
 }
 .card, .panel, .site{ box-shadow: 0 1px 2px #2d266008, 0 10px 30px -18px #2d266024; }
 .li, .shot, .copy, .flow span, .socials a{ background: rgba(250, 244, 241, .55); border-color: var(--glass-line); }
+
+/* ===== Bigger, highlighted name + photo in the sidebar (desktop) ===== */
+@media (min-width:821px){
+  .me{gap:12px}
+  .me img{width:136px;height:136px;border-radius:32px;box-shadow:0 0 0 2px var(--accent),0 16px 36px -16px #df6e5490}
+  .me .name{font-size:25px;line-height:1.08;letter-spacing:-.02em}
+  .me .role{font-size:13.5px}
+}
