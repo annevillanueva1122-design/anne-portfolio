@@ -33,6 +33,41 @@
     <script defer src="/_vercel/speed-insights/script.js"></script>
   </head>
   <body>
+    <!-- Intro loader: shows once per visit, ~1s, then fades out -->
+    <style>
+      #intro{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
+        background:radial-gradient(60% 50% at 50% 45%,#fdf9f7,#f7efeb 70%,#f1e6e1);
+        transition:opacity .5s ease,visibility .5s ease}
+      #intro.done{opacity:0;visibility:hidden}
+      #intro .in{display:flex;flex-direction:column;align-items:center;gap:14px}
+      #intro .mark{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;
+        background:#df6e54;color:#fff;font:800 24px "Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+        letter-spacing:-.02em;box-shadow:0 12px 30px -12px #df6e5488;animation:introPop .6s cubic-bezier(.2,.8,.2,1) both}
+      #intro .nm{font:700 18px "Bricolage Grotesque","Segoe UI",system-ui,sans-serif;color:#1d1838;
+        letter-spacing:-.01em;animation:introUp .6s .12s cubic-bezier(.2,.8,.2,1) both}
+      #intro .bar{width:120px;height:2px;border-radius:2px;background:#e6ddef;overflow:hidden;
+        animation:introUp .6s .2s cubic-bezier(.2,.8,.2,1) both}
+      #intro .bar i{display:block;height:100%;width:100%;background:#df6e54;transform-origin:left;
+        animation:introFill .9s .2s cubic-bezier(.6,0,.2,1) both}
+      @keyframes introPop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+      @keyframes introUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+      @keyframes introFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+      @media (prefers-reduced-motion:reduce){#intro *{animation:none!important}}
+    </style>
+    <div id="intro" aria-hidden="true">
+      <div class="in"><div class="mark">MA</div><div class="nm">May Anne Guevarra</div><div class="bar"><i></i></div></div>
+    </div>
+    <script>
+      (function(){
+        var el=document.getElementById('intro'), seen=false;
+        try{seen=sessionStorage.getItem('introSeen')==='1';sessionStorage.setItem('introSeen','1')}catch(e){}
+        if(seen){el.remove();return}
+        var t0=Date.now();
+        function hide(){setTimeout(function(){el.classList.add('done');setTimeout(function(){el.remove()},600)},Math.max(0,1100-(Date.now()-t0)))}
+        if(document.readyState==='complete')hide();else window.addEventListener('load',hide);
+        setTimeout(hide,3000);
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
