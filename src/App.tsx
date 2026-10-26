@@ -18,7 +18,8 @@ import { ContactView } from './components/ContactView';
 import { WebAppsView } from './components/WebAppsView';
 import { N8nView } from './components/N8nView';
 import { BookingModal, Lightbox, type Zoom } from './components/Overlays';
-import { BackgroundFx, Confetti, useTapSound } from './components/Effects';
+import { Confetti, useTapSound } from './components/Effects';
+import { AuroraBackdrop } from './components/AuroraBackdrop';
 
 const VIEWS = new Set<ViewKey>(NAV.map(([k]) => k));
 const viewFromHash = (): ViewKey => {
@@ -83,7 +84,7 @@ export function App() {
 
   return (
     <ActionsContext.Provider value={actions}>
-      <BackgroundFx />
+      <AuroraBackdrop />
       <div className="app">
         <Sidebar current={view} />
         <main id="main" data-content-source={source}><div className="view" key={view}>{page}</div></main>
