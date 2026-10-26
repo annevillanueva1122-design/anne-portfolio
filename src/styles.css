@@ -1,7 +1,7 @@
 /* Layout: fixed profile sidebar + workspace of clickable bento cards; each card opens its own view */
 :root{
-  --bg:#f7efeb; --bg-glow:radial-gradient(60% 50% at 50% 45%,#fdf9f7,#f7efeb 70%,#f1e6e1);
-  --panel:#ffffff; --panel-2:#faf4f1; --ink:#1d1838; --muted:#6a6485; --line:#e6ddef;
+  --bg:#e6dcd8; --bg-glow:radial-gradient(60% 50% at 50% 45%,#eee6e2,#e6dcd8 70%,#dacfcb);
+  --panel:#fcf9f7; --panel-2:#f3ece8; --ink:#1d1838; --muted:#6a6485; --line:#e6ddef;
   --accent:#df6e54; --accent-soft:#fbe7e1; --indigo:#2d2660; --indigo-soft:#e9e6f6; --ok:#23895d; --ok-soft:#dff3e9;
   --shadow:0 1px 2px rgba(45,38,96,.05),0 8px 24px -12px rgba(45,38,96,.18);
   --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
@@ -210,7 +210,7 @@ main{padding-block:28px 48px;padding-left:max(16px,2.4vw);padding-right:max(16px
   .kpi:last-child{grid-column:span 2}
 }
 /* moving background: diagonal pills and soft orbs drifting slowly behind the dashboard */
-:root{--pill-a:#c49ab3;--pill-b:#bdb5e6;--pill-c:#f3cbbf;--orb:#ffffff;--pill-op:.7;--orb-op:.85}
+:root{--pill-a:#c49ab3;--pill-b:#bdb5e6;--pill-c:#f3cbbf;--orb:#f6efec;--pill-op:.5;--orb-op:.45}
 .app{position:relative;z-index:1}
 .bgfx{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
 .bgfx .p{position:absolute;height:var(--h,64px);width:var(--w,460px);border-radius:99px;opacity:var(--pill-op);
@@ -369,7 +369,7 @@ main{padding-block:28px 48px;padding-left:max(16px,2.4vw);padding-right:max(16px
 }
 
 /* ===== Faded / frosted panels that blend with the background ===== */
-:root{ --glass: rgba(255, 250, 248, .52); --glass-line: rgba(255, 255, 255, .7); }
+:root{ --glass: rgba(246, 239, 236, .5); --glass-line: rgba(255, 255, 255, .7); }
 .side, .tools, .kpi, .bento{
   background: var(--glass);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
