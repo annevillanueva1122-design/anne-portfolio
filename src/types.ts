@@ -102,4 +102,4 @@ export interface Content {
 
 export type ViewKey =
   | 'home' | 'intro' | 'work' | 'workflows' | 'zapier' | 'lovable'
-  | 'funnels' | 'experience' | 'services' | 'toolkit' | 'contact' | 'webapps';
+  | 'funnels' | 'experience' | 'services' | 'toolkit' | 'contact' | 'webapps' | 'n8n';
