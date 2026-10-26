@@ -24,11 +24,11 @@ const WORKFLOWS: N8nWorkflow[] = [
   {
     slug: 'portfolio-assistant',
     title: 'Aurora Portfolio Assistant',
-    kind: 'AI agent · Live on this site',
+    kind: 'AI agent · Portfolio chatbot',
     image: '/n8n/portfolio-assistant.webp',
     ratio: '957 / 440',
     summary:
-      'The AI chat agent behind my portfolio. The site sends each visitor message to an n8n webhook, an AI agent with short-term memory answers questions about my work, and the reply goes straight back to the chat bubble.',
+      'An AI chat agent built for this portfolio. The site sends each visitor message to an n8n webhook, an AI agent with short-term memory answers questions about my work, and the reply goes straight back to the chat bubble.',
     tags: ['n8n AI Agent', 'Webhook', 'OpenAI', 'Vercel', 'Chat memory'],
     caseStudy: {
       challenge:
