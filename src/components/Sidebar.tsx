@@ -5,7 +5,7 @@ import { useActions } from './shared';
 
 export const NAV: [ViewKey, string, IconName][] = [
   ['home', 'Home', 'home'], ['intro', 'Intro Video', 'play'], ['work', 'Selected Work', 'work'],
-  ['workflows', 'GHL Workflows', 'flow'], ['zapier', 'Zapier Builds', 'zap'], ['lovable', 'Lovable Library', 'layers'], ['webapps', 'Web App Builds', 'app'],
+  ['workflows', 'GHL Workflows', 'flow'], ['zapier', 'Zapier Builds', 'zap'], ['n8n', 'n8n Workflows', 'nodes'], ['lovable', 'Lovable Library', 'layers'], ['webapps', 'Web App Builds', 'app'],
   ['funnels', 'Live Funnels', 'globe'], ['experience', 'Experience', 'brief'], ['services', 'Services', 'spark'],
   ['toolkit', 'Toolkit', 'tools'], ['contact', 'Contact', 'mail'],
 ];
