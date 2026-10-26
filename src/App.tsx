@@ -16,6 +16,7 @@ import { ServicesView } from './components/ServicesView';
 import { ToolkitView } from './components/ToolkitView';
 import { ContactView } from './components/ContactView';
 import { WebAppsView } from './components/WebAppsView';
+import { N8nView } from './components/N8nView';
 import { BookingModal, Lightbox, type Zoom } from './components/Overlays';
 import { BackgroundFx, Confetti, useTapSound } from './components/Effects';
 
@@ -76,6 +77,7 @@ export function App() {
       case 'toolkit': return <ToolkitView toolkit={content.toolkit} credentials={content.credentials} />;
       case 'contact': return <ContactView />;
       case 'webapps': return <WebAppsView items={content.webBuilds} />;
+      case 'n8n': return <N8nView />;
     }
   })();
 
