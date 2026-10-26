@@ -21,9 +21,9 @@ const css = `
 @media (prefers-reduced-motion:reduce){.aurora-bg,.aurora-bg g{animation:none!important}}
 
 /* Frosted panels so text stays easy to read on the colourful backdrop */
-.app main .view{background:rgba(250,245,243,.86);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);
+.app main .view{background:rgba(250,245,243,.5);-webkit-backdrop-filter:blur(26px) saturate(1.1);backdrop-filter:blur(26px) saturate(1.1);
   border:1px solid rgba(255,255,255,.55);border-radius:28px;padding:28px;box-shadow:0 20px 60px -24px rgba(40,10,70,.45)}
-.app .side{background:rgba(250,245,243,.82)}
+.app .side{background:rgba(250,245,243,.5);-webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px)}
 @media (max-width:700px){.app main .view{padding:18px;border-radius:20px}}
 `;
 
