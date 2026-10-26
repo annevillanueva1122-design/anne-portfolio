@@ -129,6 +129,36 @@ const WORKFLOWS: N8nWorkflow[] = [
     },
   },
   {
+    slug: 'lead-router',
+    title: 'LinkedIn → Clay → GHL Lead Router by State',
+    kind: 'Sample build · B2B lead generation',
+    image: '/n8n/lead-router.webp',
+    ratio: '2000 / 937',
+    summary:
+      'LinkedIn prospects are scraped and enriched in Clay, pushed to n8n, deduped in Supabase and split by state. Each state gets its own GHL pipeline stage, owner and Slack channel, and the rep gets a WhatsApp ping. The workflow itself is backed up to GitHub every night.',
+    tags: ['Clay', 'LinkedIn', 'GHL Pipelines', 'Supabase', 'GitHub', 'Slack', 'WhatsApp', 'Switch routing'],
+    caseStudy: {
+      challenge:
+        'A sales team prospecting on LinkedIn covers several states, each with its own rep. Leads enriched in Clay were exported by hand, duplicates slipped into the CRM, and New Jersey leads sat in the same stage as everyone else until someone sorted them.',
+      build: [
+        'Clay enriches LinkedIn profiles (work email, phone, title, company, location) and sends each row to an n8n webhook through an HTTP API column.',
+        'Code node normalizes messy locations ("New Jersey", "nj", "Newark, NJ") into a state code.',
+        'Supabase lookup by LinkedIn URL stops duplicates: repeat leads only get a last_seen timestamp.',
+        'Switch routes New Jersey, New York, Pennsylvania and everything else, setting the GHL pipeline stage, owner and Slack channel for each.',
+        'GHL contact upsert (tagged by state), opportunity in the right stage, then the lead and its GHL IDs are saved to Supabase.',
+        'Slack alert in the state channel plus a WhatsApp Business message to the rep. A 6 PM digest posts lead counts per state.',
+        'Nightly job pulls the workflow JSON from the n8n API and commits it to GitHub next to the Supabase migrations.',
+      ],
+      outcome: [
+        'Every lead lands in the correct state stage with an owner, with no manual sorting.',
+        'No duplicate contacts in GHL, even when the same profile is scraped twice.',
+        'Reps hear about new leads on the apps they already use, and managers get one daily number per state.',
+        'Routing rules live in a Supabase table and the workflow is versioned in GitHub, so changes are tracked and reversible.',
+      ],
+      stack: 'Clay · n8n · GoHighLevel API · Supabase (Postgres + RLS) · GitHub · Slack · WhatsApp Business Cloud API',
+    },
+  },
+  {
     slug: 'content-engine',
     title: 'YouTube Shorts + FB Reels Content Engine',
     kind: 'Sample build · Short-form content',
