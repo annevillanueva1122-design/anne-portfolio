@@ -185,6 +185,36 @@ const WORKFLOWS: N8nWorkflow[] = [
       stack: 'n8n · OpenAI · Creatomate · Google Drive · YouTube Data & Analytics API · Meta Graph API · Google Ads API · Google Sheets · Slack · Gmail',
     },
   },
+  {
+    slug: 'whop-ghl-saas',
+    title: 'Whop → GHL Agency SaaS Onboarding & Revenue Reporting',
+    kind: 'Sample build · Agency SaaS',
+    image: '/n8n/whop-ghl-saas.webp',
+    ratio: '2072 / 540',
+    summary:
+      'A white-label GHL SaaS sold on Whop runs itself after checkout. New members become GHL contacts and get their own sub-account with the SaaS snapshot loaded. Every payment, failed charge and cancellation is logged to Google Sheets for MRR and churn reporting, and the team gets a Slack alert for each one.',
+    tags: ['Whop', 'GHL Agency API', 'Sub-accounts', 'Snapshots', 'Google Sheets', 'Slack', 'Switch routing'],
+    caseStudy: {
+      challenge:
+        'An agency sells its GHL SaaS plans on Whop. Every sale meant someone had to spot it, create the sub-account, load the snapshot and tag the client by hand. Failed payments and cancellations were only noticed when someone opened Whop, and revenue lived in exports instead of one report.',
+      build: [
+        'Whop webhook receives membership and payment events: activated, updated, payment succeeded and payment failed.',
+        'Code node turns the Whop payload into one clean record (name, email, product, plan, amount) plus an event type.',
+        'Switch routes new clients, payments, failed payments and cancellations down their own paths.',
+        'GHL contact upsert in the agency CRM, then lifecycle tags (whop-active, whop-payment-failed, whop-cancelled) that start the agency follow-up workflows in GHL.',
+        'New clients get a sub-account through the GHL Agency API, with the SaaS snapshot loaded and the client saved as the prospect.',
+        'Every event becomes one Google Sheets row with amount, billing reason, membership, GHL contact and sub-account IDs.',
+        'Slack alert in the team channel for each new client, payment, failed charge and cancellation. GHL steps fail soft, so the report row and alert still go out if one API call errors.',
+      ],
+      outcome: [
+        'A new client has a ready sub-account right after checkout, with no manual setup.',
+        'Failed payments and cancellations reach the team right away, so follow-up starts the same day.',
+        'One Google Sheet holds every sale, renewal and churn event, ready for MRR and churn reports.',
+        'GHL tags hand each lifecycle stage to the agency workflows for onboarding emails and dunning.',
+      ],
+      stack: 'n8n · Whop webhooks · GoHighLevel API (Contacts, Locations) · Google Sheets · Slack',
+    },
+  },
 ];
 
 const css = `
