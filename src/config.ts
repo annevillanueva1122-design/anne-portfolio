@@ -7,7 +7,7 @@ export const config = {
   notifyEmail: 'anne.villanueva1122@gmail.com',
   bookingUrl:
     'https://calendar.google.com/calendar/appointments/schedules/AcZssZ3CATbpabGfo88_K7s4i1uIv5q5qDJ_MMjLMUJ0v-l1YiSMsb4lDkBt91pB8aoeBIw68ejvvIk6?gv=true',
-  cvUrl: 'https://drive.google.com/file/d/1JHQxmfl1sTPUhs9j2xPeVdAP5t-G5GtH/view?usp=sharing',
+  cvUrl: 'https://drive.google.com/file/d/1d99OXvjsLXLYlf7JoHxQSqbJ4d3h01j3/view?usp=sharing',
   otherCaseStudyUrl: 'https://drive.google.com/file/d/1EnfUswlP_OETKDsfXgoya-Pw2o1JpGsT/view?usp=drive_link',
 } as const;
 
