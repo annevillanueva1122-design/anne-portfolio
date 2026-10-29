@@ -1,6 +1,6 @@
 # May Anne Guevarra · Portfolio
 
-Live: https://anne-portfolio-ten.vercel.app
+Live: https://yhampower.vercel.app
 
 React 19 + TypeScript, built with Vite and hosted on Vercel. Content, contact messages and media live in Supabase. Unit tests (Vitest) and end-to-end tests (Playwright) run on every push and pull request through GitHub Actions.
 
