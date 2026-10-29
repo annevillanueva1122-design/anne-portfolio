@@ -7,7 +7,7 @@ export const config = {
   notifyEmail: 'anne.villanueva1122@gmail.com',
   bookingUrl:
     'https://calendar.google.com/calendar/appointments/schedules/AcZssZ3CATbpabGfo88_K7s4i1uIv5q5qDJ_MMjLMUJ0v-l1YiSMsb4lDkBt91pB8aoeBIw68ejvvIk6?gv=true',
-  cvUrl: 'https://drive.google.com/file/d/1d99OXvjsLXLYlf7JoHxQSqbJ4d3h01j3/view?usp=sharing',
+  cvUrl: '/May-Anne-Guevarra-CV-AI-Solutions-Architect_1.pdf',
   otherCaseStudyUrl: 'https://drive.google.com/file/d/1EnfUswlP_OETKDsfXgoya-Pw2o1JpGsT/view?usp=drive_link',
 } as const;
 
